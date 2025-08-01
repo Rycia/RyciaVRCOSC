@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\Haile\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.11.1</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="C:\Users\Haile\.nuget\packages\" />
+    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-base-whisper.dll" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-base-whisper.dll')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ggml-base-whisper.dll</TargetPath>
+      <Private>True</Private>
+      <Link>ggml-base-whisper.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-cpu-whisper.dll" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-cpu-whisper.dll')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ggml-cpu-whisper.dll</TargetPath>
+      <Private>True</Private>
+      <Link>ggml-cpu-whisper.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-vulkan-whisper.dll" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-vulkan-whisper.dll')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ggml-vulkan-whisper.dll</TargetPath>
+      <Private>True</Private>
+      <Link>ggml-vulkan-whisper.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-whisper.dll" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\ggml-whisper.dll')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ggml-whisper.dll</TargetPath>
+      <Private>True</Private>
+      <Link>ggml-whisper.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-base-whisper.so" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-base-whisper.so')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libggml-base-whisper.so</TargetPath>
+      <Private>True</Private>
+      <Link>libggml-base-whisper.so</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-cpu-whisper.so" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-cpu-whisper.so')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libggml-cpu-whisper.so</TargetPath>
+      <Private>True</Private>
+      <Link>libggml-cpu-whisper.so</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-vulkan-whisper.so" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-vulkan-whisper.so')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libggml-vulkan-whisper.so</TargetPath>
+      <Private>True</Private>
+      <Link>libggml-vulkan-whisper.so</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-whisper.so" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libggml-whisper.so')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libggml-whisper.so</TargetPath>
+      <Private>True</Private>
+      <Link>libggml-whisper.so</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libwhisper.so" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\libwhisper.so')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libwhisper.so</TargetPath>
+      <Private>True</Private>
+      <Link>libwhisper.so</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\whisper.dll" Condition="Exists('$(NuGetPackageRoot)volcanicarts.vrcosc.sdk\2025.212.0\contentFiles\any\net8.0-windows10.0.26100\whisper.dll')">
+      <NuGetPackageId>VolcanicArts.VRCOSC.SDK</NuGetPackageId>
+      <NuGetPackageVersion>2025.212.0</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>whisper.dll</TargetPath>
+      <Private>True</Private>
+      <Link>whisper.dll</Link>
+    </None>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <PkgMicrosoft_Xaml_Behaviors_Wpf Condition=" '$(PkgMicrosoft_Xaml_Behaviors_Wpf)' == '' ">C:\Users\Haile\.nuget\packages\microsoft.xaml.behaviors.wpf\1.1.135</PkgMicrosoft_Xaml_Behaviors_Wpf>
+    <PkgExtended_Wpf_Toolkit Condition=" '$(PkgExtended_Wpf_Toolkit)' == '' ">C:\Users\Haile\.nuget\packages\extended.wpf.toolkit\4.6.1</PkgExtended_Wpf_Toolkit>
+  </PropertyGroup>
+</Project>
