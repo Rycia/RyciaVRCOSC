@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InterhapticsOSC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6effa42efc9d36c217955f4edcbe30d5fd972cad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1642a66f26465e9abac4de0d713445f856b51cfc")]
 [assembly: System.Reflection.AssemblyProductAttribute("InterhapticsOSC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InterhapticsOSC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
