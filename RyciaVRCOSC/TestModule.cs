@@ -1,4 +1,4 @@
-namespace RyciaVRCOSC;
+﻿using VRCOSC.App.SDK.Modules;
 
 [ModuleTitle("My Test Module")]
 [ModuleDescription("This is my test module")]

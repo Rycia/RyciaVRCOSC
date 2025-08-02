@@ -1,4 +1,4 @@
-This is a package for VRCOSC containing module(s) made by Rycia for VRCOSC.  
+This is a package for VRCOSC containing module(s) made by Rycia.
 [You can find VRCOSC here. This is a requirement.](https://github.com/VolcanicArts/VRCOSC)
 
 
