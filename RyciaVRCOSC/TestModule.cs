@@ -1,3 +1,5 @@
+namespace RyciaVRCOSC;
+
 [ModuleTitle("My Test Module")]
 [ModuleDescription("This is my test module")]
 [ModuleType(ModuleType.Generic)]

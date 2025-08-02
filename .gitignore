@@ -160,3 +160,16 @@ cython_debug/
 #.idea/
 
 .fake
+
+bin/
+obj/
+/build
+/releases
+/publish
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+/.idea
+*.user
+.vs/
+*.meta
