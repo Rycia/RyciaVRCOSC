@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RyciaVRCOSC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+504e5716ed53ad415d008ee10442b37838cdd07c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8dbed4bcca261d988b06132444a624e1ed674073")]
 [assembly: System.Reflection.AssemblyProductAttribute("RyciaVRCOSC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RyciaVRCOSC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
