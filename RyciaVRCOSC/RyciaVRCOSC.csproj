@@ -6,7 +6,8 @@
 		<Nullable>enable</Nullable>
 		<WindowsSdkPackageVersion>10.0.26100.1</WindowsSdkPackageVersion>
 		<Title>Rycia's Modules</Title>
-		<Platforms>AnyCPU;x64</Platforms>
+		<PlatformTarget>x64</PlatformTarget>
+		<Prefer32Bit>false</Prefer32Bit>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="WYVRN\WyvrnAPI.OLD2cs" />
 	  <None Remove="WYVRN\WyvrnAPI.OLDcs" />
 	</ItemGroup>
 

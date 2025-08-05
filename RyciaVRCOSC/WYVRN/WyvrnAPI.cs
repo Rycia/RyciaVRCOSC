@@ -1,7 +1,5 @@
 using RyciaVRCOSC.Wyvern;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,175 +10,57 @@ namespace WyvrnSDK
     public struct APPINFOTYPE
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string Title; //TCHAR Title[256];
+        public string Title;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
-        public string Description; //TCHAR Description[1024];
+        public string Description;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string Author_Name; //TCHAR Name[256];
+        public string Author_Name;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        public string Author_Contact; //TCHAR Contact[256];
+        public string Author_Contact;
 
-        public UInt32 SupportedDevice; //DWORD SupportedDevice;
-
-        public UInt32 Category; //DWORD Category;
+        public UInt32 SupportedDevice;
+        public UInt32 Category;
     }
 
     public static class WyvrnAPI
     {
-
-#if PLATFORM_XBOXONE
-#if UNITY_EDITOR
         const string DLL_NAME = "RzChromatic";
-#else
-        const string DLL_NAME = "RzChromatic";
-#endif
-#else
-#if UNITY_3 || UNITY_3_0 || UNITY_3_1 || UNITY_3_2 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5
-        const string DLL_NAME = "RzChromatic";
-#elif UNITY_64 || UNITY_EDITOR
-        const string DLL_NAME = "RzChromatic64";
-#else
-        const string DLL_NAME = "RzChromatic";
-#endif
-#endif
-
-#if ENABLE_IL2CPP
-
-        [DllImport("version.dll", CharSet = CharSet.Unicode)]
-        private static extern int GetFileVersionInfoSize(string lptstrFilename, out uint lpdwHandle);
-        [DllImport("version.dll", CharSet = CharSet.Unicode)]
-        private static extern bool GetFileVersionInfo(string lptstrFilename, uint dwHandle, uint dwLen, IntPtr lpData);
-        [DllImport("version.dll", CharSet = CharSet.Unicode)]
-        private static extern bool VerQueryValue(IntPtr pBlock, string lpSubBlock, out IntPtr lplpBuffer, out uint puLen);
-
-        // Define the structure to hold language and code page info
-        [StructLayout(LayoutKind.Sequential)]
-        private struct LangAndCodePage
-        {
-            public ushort wLanguage;
-            public ushort wCodePage;
-        }
-
-        public static string GetProductVersion(string filePath)
-        {
-            uint handle;
-            int size = GetFileVersionInfoSize(filePath, out handle);
-
-            if (size == 0)
-            {
-                // File not found, no version info, or other error
-                //Debug.LogError($"GetFileVersionInfoSize failed for {filePath}. Error: {Marshal.GetLastWin32Error()}");
-                return null;
-            }
-
-            IntPtr buffer = Marshal.AllocHGlobal(size);
-            try
-            {
-                if (!GetFileVersionInfo(filePath, handle, (uint)size, buffer))
-                {
-                    //Debug.LogError($"GetFileVersionInfo failed for {filePath}. Error: {Marshal.GetLastWin32Error()}");
-                    return null;
-                }
-
-                IntPtr pValue;
-                uint len;
-
-                // First, get the list of available translations
-                if (!VerQueryValue(buffer, "\\VarFileInfo\\Translation", out pValue, out len))
-                {
-                    // If there are no translations, try a neutral one as a fallback.
-                    // This is common for many files.
-                    string subBlock = $"\\StringFileInfo\\{0409:X4}{1200:X4}\\FileVersion"; // US English, Unicode
-                    if (VerQueryValue(buffer, subBlock, out pValue, out len))
-                    {
-                        return Marshal.PtrToStringUni(pValue);
-                    }
-                    //Debug.LogError("Could not find translation information");
-                    return null;
-                }
-                
-                // The length is the total size in bytes of the translation array.
-                // We divide by the size of our struct to get the count.
-                int translationCount = (int)len / Marshal.SizeOf(typeof(LangAndCodePage));
-                LangAndCodePage[] translations = new LangAndCodePage[translationCount];
-                
-                // Marshal the array of structs from the pointer
-                IntPtr currentPtr = pValue;
-                for (int i = 0; i < translationCount; i++)
-                {
-                    translations[i] = (LangAndCodePage)Marshal.PtrToStructure(currentPtr, typeof(LangAndCodePage));
-                    currentPtr = (IntPtr)(currentPtr.ToInt64() + Marshal.SizeOf(typeof(LangAndCodePage)));
-                }
-
-                // Try each translation until we find one that works
-                foreach (var translation in translations)
-                {
-                    string subBlock = $@"\StringFileInfo\{translation.wLanguage:X4}{translation.wCodePage:X4}\FileVersion";
-                    if (VerQueryValue(buffer, subBlock, out pValue, out len) && len > 0)
-                    {
-                        return Marshal.PtrToStringUni(pValue);
-                    }
-                }
-
-                //Debug.LogError("Could not find FileVersion information in any language");
-                return null;
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(buffer);
-            }
-        }
-
-#endif
-
         static bool _sIsChromaticAvailable = false;
 
+        public static int WyvrnWrapperInitSDK() // Can call WyvrnWrapperInitSDK() anywhere now.
+        {
+            APPINFOTYPE appInfo = new APPINFOTYPE
+            {
+                Title = "InterhapticsOSC",
+                Description = "Connects VRChat OSC parameters to Razer Sensa/Hypersense devices via WYVRN",
+                Author_Name = "Rycia",
+                Author_Contact = "https://github.com/Rycia/RyciaVRCOSC",
+                Category = 1, // Utility
+                SupportedDevice = 63 // All available devices (bitmask)
+            };
+
+            return CoreInitSDK(ref appInfo);
+        }
+
         static WyvrnAPI()
+
         {
             _sIsChromaticAvailable = false;
 
             try
             {
                 string[] fileNames;
-
                 // check program files for production version
-
                 // check windows systems folders for production version
 
-#if UNITY_64
-                fileNames = new string[]
-                {
-					// Get 64-bit program files folder
-                    Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                        "Razer Chroma SDK",
-                        "bin",
-                        "RzChromatic64.dll"),
-					// Get system32 folder
-					Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                        "System32",
-                        "RzChromatic64.dll"),
-                };
-#else
-                fileNames = new string[]
-                {
-					// Get 32-bit program files folder
-                    Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                        "Razer Chroma SDK",
-                        "bin",
-                        "RzChromatic.dll"),
-					// Get SysWOW64 folder
-					Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                        "SysWOW64",
-                        "RzChromatic.dll"),
-                };
-#endif
+                fileNames = new string[]{
+          
+          //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Razer Chroma SDK", "bin", "RzChromatic.dll"), // Get 32-bit program files folder
+          Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysWOW64", "RzChromatic.dll"), // Get SysWOW64 folder
+      };
 
                 foreach (string fileName in fileNames)
                 {
@@ -190,15 +70,19 @@ namespace WyvrnSDK
                     }
                 }
 
-                _sIsChromaticAvailable = true; // production version or better
+                _sIsChromaticAvailable = true;  // production version or better
             }
             catch (Exception ex)
             {
-                //Debug.LogError(string.Format("The ChromaSDK is not available! Exception={0}", ex));
+                string errorMessage = $"[Rycia.Interhaptics.WYVRN] [ERROR] The ChromaSDK is not available! Exception={ex}";
+
+                Console.WriteLine(errorMessage);
+                RyciaVRCOSC.InterhapticsModule.ExternalLogger?.Invoke(errorMessage);
             }
         }
 
-        private static bool IsProductionVersionAvailable(string fileName)
+        private
+         static bool IsProductionVersionAvailable(string fileName)
         {
             try
             {
@@ -208,15 +92,10 @@ namespace WyvrnSDK
                     return false;
                 }
 
-#if ENABLE_IL2CPP
-				String fileVersion = GetProductVersion(fileName);
-#else
                 System.Diagnostics.FileVersionInfo versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(fileName);
+                string fileVersion = versionInfo.FileVersion;
+                RyciaVRCOSC.InterhapticsModule.ExternalLogger?.Invoke(string.Format("ChromaSDK Version={0} File={1}", fileVersion, fileName));
 
-
-                String fileVersion = versionInfo.FileVersion;
-#endif
-                //Debug.Log(string.Format("ChromaSDK Version={0} File={1}", fileVersion, fileName));
                 String[] versionParts = fileVersion.Split(".".ToCharArray());
                 if (versionParts.Length < 4)
                 {
@@ -248,29 +127,30 @@ namespace WyvrnSDK
                 }
 
                 // Anything less than the min version returns false
-
                 // major, minor, build, revision ref: https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assemblyversionattribute.-ctor?source=recommendations&view=net-7.0
                 const int minMajor = 2;
                 const int minMinor = 0;
                 const int minBuild = 2;
                 const int minRevision = 0;
 
-                if (major < minMajor) // Less than minMajor
+                if (major < minMajor)  // Less than minMajor
                 {
                     return false;
                 }
 
-                if (major == minMajor && minor < minMinor) // Less than minMinor
+                if (major == minMajor && minor < minMinor)  // Less than minMinor
                 {
                     return false;
                 }
 
-                if (major == minMajor && minor == minMinor && build < minBuild) // Less than minBuild
+                if (major == minMajor && minor == minMinor &&
+                    build < minBuild)  // Less than minBuild
                 {
                     return false;
                 }
 
-                if (major == minMajor && minor == minMinor && build == minBuild && revision < minRevision) // Less than minRevision
+                if (major == minMajor && minor == minMinor && build == minBuild &&
+                    revision < minRevision)  // Less than minRevision
                 {
                     return false;
                 }
@@ -279,27 +159,21 @@ namespace WyvrnSDK
             }
             catch (Exception ex)
             {
-                //Debug.LogError(string.Format("The ChromaSDK is not available! Exception={0}", ex));
+                string errorMessage = $"[Rycia.Interhaptics.WYVRN] [ERROR] The ChromaSDK is not available! Exception={ex}";
+                Console.WriteLine(errorMessage);
+                RyciaVRCOSC.InterhapticsModule.ExternalLogger?.Invoke(errorMessage);
                 return false;
             }
         }
 
-        /// <summary>
         /// Check if the RzChromatic DLL exists before calling API Methods
-        /// </summary>
-        /// <returns></returns>
-        public static bool IsWyvrnSDKAvailable()
-        {
-            return _sIsChromaticAvailable;
-        }
+        public
+         static bool IsWyvrnSDKAvailable()
+        { return _sIsChromaticAvailable; }
 
-        #region Helpers (handle path conversions)
+        #region Helpers(handle path conversions)
 
-        /// <summary>
         /// Helper to Unicode path string to IntPtr
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
         private static IntPtr GetUnicodeIntPtr(string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -312,10 +186,7 @@ namespace WyvrnSDK
             return lpData;
         }
 
-        /// <summary>
         /// Helper to recycle the IntPtr
-        /// </summary>
-        /// <param name="lpData"></param>
         private static void FreeIntPtr(IntPtr lpData)
         {
             if (lpData != IntPtr.Zero)
@@ -326,13 +197,12 @@ namespace WyvrnSDK
 
         #endregion
 
-
         #region Public API Methods
-        private static bool _sInitialized = false;
-        /// <summary>
+        private
+         static bool _sInitialized = false;
         /// Direct access to low level API.
-        /// </summary>
-        public static int CoreInitSDK(ref WyvrnSDK.APPINFOTYPE appInfo)
+        public
+         static int CoreInitSDK(ref WyvrnSDK.APPINFOTYPE appInfo)
         {
             appInfo.SupportedDevice = 63;
 
@@ -351,10 +221,8 @@ namespace WyvrnSDK
             }
             return result;
         }
-        /// <summary>
-        /// Direct access to low level API.
-        /// </summary>
-        public static int CoreSetEventName(string name)
+        public
+         static int CoreSetEventName(string name)
         {
             if (!_sIsChromaticAvailable)
             {
@@ -369,10 +237,8 @@ namespace WyvrnSDK
             FreeIntPtr(lp_Name);
             return result;
         }
-        /// <summary>
-        /// Direct access to low level API.
-        /// </summary>
-        public static int CoreUnInit()
+        public
+         static int CoreUnInit()
         {
             if (!_sIsChromaticAvailable)
             {
@@ -392,22 +258,12 @@ namespace WyvrnSDK
         #endregion
 
         #region Private DLL Hooks
-        /// <summary>
-        /// Direct access to low level API.
-        /// EXPORT_API RZRESULT PluginCoreInitSDK(ChromaSDK::APPINFOTYPE* AppInfo);
-        /// </summary>
-        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         private static extern int PluginCoreInitSDK(ref WyvrnSDK.APPINFOTYPE appInfo);
-        /// <summary>
-        /// Direct access to low level API.
-        /// EXPORT_API RZRESULT PluginCoreSetEventName(LPCTSTR Name);
-        /// </summary>
-        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+
+        [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
         private static extern int PluginCoreSetEventName(IntPtr name);
-        /// <summary>
-        /// Direct access to low level API.
-        /// EXPORT_API RZRESULT PluginCoreUnInit();
-        /// </summary>
+
         [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
         private static extern int PluginCoreUnInit();
         #endregion

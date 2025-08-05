@@ -1,11 +1,12 @@
 ﻿using RyciaVRCOSC.Wyvern;
 using System.Threading.Tasks;
-using VRCOSC.App.SDK.Handlers;
+//using VRCOSC.App.SDK.Handlers;
 using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
-using VRCOSC.App.SDK.VRChat;
+//using VRCOSC.App.SDK.VRChat;
+//using VRCOSC.App.Utils;
 using WyvrnSDK;
-using VRCOSC.App.Utils;
+
 
 //https://vrcosc.com/docs/v2/sdk
 //https://github.com/VolcanicArts/VRCOSC-Modules/blob/main/VRCOSC.Modules/Media/MediaModule.cs as example for VRCOSC SDK formatting
@@ -50,9 +51,7 @@ public class InterhapticsModule : Module
     protected override void OnPostLoad()
     {
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnPostLoad");
-
         ExternalLogger = Log; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
-        
     }
 
     protected override Task<bool> OnModuleStart()
@@ -63,86 +62,43 @@ public class InterhapticsModule : Module
         //Only called once on start so is the perfect place to do initial setup of anything module may need to function, dynamic at runtime.
 
         // Grab and initialize settings
-        GetSettingValue<int>(InterhapticsVRCOSCSetting.Mode); //Obtain mode as raw int
+        GetSettingValue<int>(InterhapticsVRCOSCSetting.Mode);      // Obtain mode as raw int
         GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity); // Obtain intensity as raw float
 
         //Grab and initialize parameters
+        //Placeholder
 
         // Initialize WYVRN SDK
         if (!WyvrnAPI.IsWyvrnSDKAvailable())
         {
             _mResult = RazerErrors.RZRESULT_DLL_NOT_FOUND;
-            Log("WYVRN SDK not available. DLL not found! This DLL comes installed with Razer, so if you don't have Razer Synapse installed, you must install it and reboot your system.");
-            return Task.FromResult(false); //Failed to load, so set to false
+            Log("[Rycia.Interhaptics] [ERROR] WYVRN SDK not available. DLL not found! Please install Razer Synapse and reboot.");
+            return Task.FromResult(false);
         }
 
-        APPINFOTYPE appInfo = new APPINFOTYPE
-        {
-            Title = "InterhapticsOSC",
-            Description = "Connects VRChat OSC parameters to Razer Sensa/Hypersense devices via WYVRN",
-            Author_Name = "Rycia",
-            Author_Contact = "https://github.com/Rycia/RyciaVRCOSC",
-            Category = 1 // Utility
-        };
+        _mResult = WyvrnAPI.WyvrnWrapperInitSDK();
 
-        _mResult = WyvrnAPI.CoreInitSDK(ref appInfo);
         if (_mResult == RazerErrors.RZRESULT_SUCCESS)
         {
             Log("[Rycia.Interhaptics] [INFO] WYVRN SDK initialized successfully.");
-            Task.Delay(100).Wait(); // Blocking call since VRCOSC's OnPostLoad is sync. Cautionary wait based on the need of WYVRN's SDK.
+            Task.Delay(100).Wait(); // Give SDK time to stabilize
         }
         else
         {
-            Log("[Rycia.Interhaptics] [ERROR] $WYVRN SDK failed to initialize. Error Code: {_mResult}");
+            Log($"[Rycia.Interhaptics] [ERROR] WYVRN SDK failed to initialize. Error Code: {_mResult}");
+            return Task.FromResult(false);
         }
-        return Task.FromResult(true); //Return false if your module has failed to start, true otherwise. True here because module probably succeeded to load.
+
+        return Task.FromResult(true);
     }
-
-    //protected override Task OnModuleStop()
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnModuleStop");
-    //    return Task.CompletedTask; //must return something
-    //}
-
-    //protected override void OnAvatarChange(AvatarConfig? avatarConfig)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnAvatarChange");
-    //}
-
-    //protected override void OnRegisteredParameterReceived(RegisteredParameter parameter)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnRegisteredParameter Received");
-    //}
-
-    //public void OnInstanceJoined(VRChatClientEventInstanceJoined eventArgs)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnInstanceJoined");
-    //}
-
-    //public void OnInstanceLeft(VRChatClientEventInstanceLeft eventArgs)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnInstanceLeft");
-    //}
-
-    //public void OnUserJoined(VRChatClientEventUserJoined eventArgs)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnUserJoined");
-    //}
-    //public void OnUserLeft(VRChatClientEventUserLeft eventArgs)
-    //{
-    //    LogDebug("[Rycia.Interhaptics] [DEBUG] OnUserLeft");
-    //}
 
     private enum InterhapticsVRCOSCSetting // For the settings UI, defines the order/grouping of what setting goes under what section
     {
-        Mode,
-        Intensity
+        Mode, Intensity
     }
     private enum InterhapticsVRCOSCParameter
     {
-        ContactHitRight,
-        ContactHitLeft,
-        ContactHitCenter
+        ContactHitRight, ContactHitLeft, ContactHitCenter
     }
 
     private enum InterhapticsVRCOSCVariable
