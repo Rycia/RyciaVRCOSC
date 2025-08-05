@@ -1,30 +1,33 @@
-﻿using RyciaVRCOSC.Wyvern;
+﻿#region Using Imports
 using System.Threading.Tasks;
-//using VRCOSC.App.SDK.Handlers;
 using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
+using RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN;
+#endregion
+#region Notes
 //using VRCOSC.App.SDK.VRChat;
 //using VRCOSC.App.Utils;
-using WyvrnSDK;
-
 
 //https://vrcosc.com/docs/v2/sdk
 //https://github.com/VolcanicArts/VRCOSC-Modules/blob/main/VRCOSC.Modules/Media/MediaModule.cs as example for VRCOSC SDK formatting
 //https://github.com/VolcanicArts/VRCOSC-Modules/blob/main/VRCOSC.Modules/AFKDetection/AFKDetectionModule.cs another example for VRCOSC
 //https://doc.wyvrn.com/docs/wyvrn-sdk/unity/
-
-namespace RyciaVRCOSC;
-
+#endregion
+namespace RyciaVRCOSC.InterhapticsModule;
+#region Module Information
 [ModuleTitle("Interhaptics")]
 [ModuleDescription("Parameter support for Interhaptics-based devices such as Razer headsets with Razer Sensa/Hypersense haptic feedback.")]
 [ModuleType(ModuleType.Generic)]
 [ModulePrefab("Prefabs", "https://vrcosc.com/docs/downloads#prefabs")] // No prefab yet, change later. dont use.
-
+#endregion
 public class InterhapticsModule : Module
 {
+    #region Program Variables
     private int _mResult = 0; // This is the result on wether or not if Wyvrn successfully loaded up or not. Needs to be here to be global to this class.
     public static System.Action<string>? ExternalLogger; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
+    #endregion
 
+    #region Module Loading
     protected override void OnPreLoad()
     {
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnPreLoad");
@@ -53,13 +56,15 @@ public class InterhapticsModule : Module
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnPostLoad");
         ExternalLogger = Log; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
     }
+    #endregion
 
+    #region Module Logic
     protected override Task<bool> OnModuleStart()
     {
+
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnModuleStart");
-        //Async runs asynchronously, it allows to use await inside the method to do things like wait for like file loading
-        //Called whenever a user runs the modules, includes the modules being automatically started.
-        //Only called once on start so is the perfect place to do initial setup of anything module may need to function, dynamic at runtime.
+        // Async runs asynchronously, it allows to use await inside the method to do things like wait for like file loading
+        // Called whenever a user runs the modules, includes the modules being automatically started, only once on start so is the perfect place to do initial setup.
 
         // Grab and initialize settings
         GetSettingValue<int>(InterhapticsVRCOSCSetting.Mode);      // Obtain mode as raw int
@@ -92,6 +97,43 @@ public class InterhapticsModule : Module
         return Task.FromResult(true);
     }
 
+    protected override void OnRegisteredParameterReceived(RegisteredParameter parameter)
+    {
+        switch (parameter.Lookup)
+        {
+            case InterhapticsVRCOSCParameter.ContactHitRight:
+                {
+                    float intensity = GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity);
+                    float scaled = parameter.GetValue<float>() * intensity;
+                    LogDebug($"[HIT RIGHT] OSC={parameter.GetValue<float>()} → INTENSITY={scaled}");
+                    //WyvrnAPI.CoreSetEventName("Haptic_Right");
+                    //WyvrnAPI.PlayConstant(scaled, 0.2, scaled, 1, LateralFlag.Right);
+                    WyvrnAPI.CoreSetEventName("RazerKrakenV4Pro_Steady");
+                    break;
+                }
+            case InterhapticsVRCOSCParameter.ContactHitLeft:
+                {
+                    float intensity = GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity);
+                    float scaled = parameter.GetValue<float>() * intensity;
+                    LogDebug($"[HIT LEFT] OSC={parameter.GetValue<float>()} → INTENSITY={scaled}");
+                    //WyvrnAPI.CoreSetEventName("Haptic_Left");
+                    WyvrnAPI.CoreSetEventName("RazerKrakenV4Pro_Steady");
+                    break;
+                }
+            case InterhapticsVRCOSCParameter.ContactHitCenter:
+                {
+                    float intensity = GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity);
+                    float scaled = parameter.GetValue<float>() * intensity;
+                    LogDebug($"[HIT CENTER] OSC={parameter.GetValue<float>()} → INTENSITY={scaled}");
+                    //WyvrnAPI.CoreSetEventName("Haptic_Center");
+                    WyvrnAPI.CoreSetEventName("RazerKrakenV4Pro_Steady");
+                    break;
+                }
+        }
+    }
+    #endregion
+
+    #region Module Variables
     private enum InterhapticsVRCOSCSetting // For the settings UI, defines the order/grouping of what setting goes under what section
     {
         Mode, Intensity
@@ -103,6 +145,7 @@ public class InterhapticsModule : Module
 
     private enum InterhapticsVRCOSCVariable
     {
-        //Placeholder
+        ContactThreshold
     }
+    #endregion
 }

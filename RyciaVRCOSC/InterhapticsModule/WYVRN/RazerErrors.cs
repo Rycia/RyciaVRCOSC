@@ -1,4 +1,4 @@
-﻿namespace RyciaVRCOSC.Wyvern
+﻿namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
 {
     public class RazerErrors
     {
