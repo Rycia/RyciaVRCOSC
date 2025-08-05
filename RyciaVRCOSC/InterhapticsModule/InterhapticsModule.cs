@@ -4,6 +4,7 @@ using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
 using RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN;
 #endregion
+
 #region Notes
 //using VRCOSC.App.SDK.VRChat;
 //using VRCOSC.App.Utils;
@@ -13,7 +14,9 @@ using RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN;
 //https://github.com/VolcanicArts/VRCOSC-Modules/blob/main/VRCOSC.Modules/AFKDetection/AFKDetectionModule.cs another example for VRCOSC
 //https://doc.wyvrn.com/docs/wyvrn-sdk/unity/
 #endregion
+
 namespace RyciaVRCOSC.InterhapticsModule;
+
 #region Module Information
 [ModuleTitle("Interhaptics")]
 [ModuleDescription("Parameter support for Interhaptics-based devices such as Razer headsets with Razer Sensa/Hypersense haptic feedback.")]

@@ -1,9 +1,12 @@
+#region Using Imports
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+#endregion
 
 namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
+
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct APPINFOTYPE
