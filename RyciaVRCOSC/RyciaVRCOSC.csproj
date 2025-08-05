@@ -6,7 +6,16 @@
 		<Nullable>enable</Nullable>
 		<WindowsSdkPackageVersion>10.0.26100.1</WindowsSdkPackageVersion>
 		<Title>Rycia's Modules</Title>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="WYVRN\WyvrnAPI - Copy.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="WYVRN\WyvrnAPI.OLDcs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="VolcanicArts.VRCOSC.SDK" Version="2025.212.0" />
