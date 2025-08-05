@@ -1,3 +1,7 @@
+# Custom defined
+*.lnk
+*.meta
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
