@@ -42,3 +42,7 @@ WYVRN is already included with Razer's installation, so nothing is necessary wit
 
 DLL's and heavily modified de-Unity'ed SDK content is used from here from [WYVRN](https://doc.wyvrn.com/docs/wyvrn-sdk/unity/) and [Interhaptics](https://doc.wyvrn.com/docs/interhaptics-sdk/haptics-sdk-for-game-engines/key-concepts/).  
 Thank you to the Interhaptics and WYVRN team for personally helping me out with their SDK, since this repo was never an intended-- but a creative usecase!
+
+There is a prefab set up for you to put on your VRChat avatars. [You can get it here](https://github.com/Rycia/RyciaVRCOSC/tree/90c7d83ed2fec07f5618fc01a627d9662fa40b93/RyciaVRCOSC/prefabs) or at "RyciaVRCOSC/prefabs/InterhapticsOSC". An INSTRUCTIONS.txt is available with the download. You can put it anywhere on your avatar, and constrain it to the head. They're just a few contacts and parameters pre-set up with a global toggle for your avatar.
+<img width="1320" height="896" alt="{7713FA8D-FF35-45DA-A846-9D09E93DC051}" src="https://github.com/user-attachments/assets/ddbf8960-651a-4aa7-be0b-94028cc81547" />
+
