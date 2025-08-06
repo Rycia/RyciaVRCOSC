@@ -16,6 +16,10 @@
 	  <None Remove="InterhapticsModule\Interhaptics\**" />
 	  <Page Remove="InterhapticsModule\Interhaptics\**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="InterhapticsModule\Interhaptics\HAR.Native.cs" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="VolcanicArts.VRCOSC.SDK" Version="2025.212.0" />

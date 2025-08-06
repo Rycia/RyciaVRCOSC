@@ -16,63 +16,52 @@ namespace RyciaVRCOSC.InterhapticsModule.Interhaptics
         #region DLL Import
         private static readonly IntPtr _libraryHandle = IntPtr.Zero;
 
-		private static readonly string RemoteDllPath = Path.Combine( // Use github repo path before the local build path
+        private static readonly string DllPath = Path.Combine(
 			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-			@"VRCOSC\packages\remote\rycia.vrcosc.modules\HAR.dll"
+			@"VRCOSC\packages\dependencies\HAR.dll"
 		);
 
-		private static readonly string LocalDllPath = Path.Combine(
-			Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-			@"VRCOSC\packages\local\HAR.dll"
-		);
         const string DLL_NAME = "HAR";
 
-		static HAR()
-		{
-			if (!Environment.Is64BitProcess) //Only support 64 bit
+        static HAR()
+        {
+            if (!Environment.Is64BitProcess)
             {
-				Log("[Rycia.Interhaptics.HAR] [ERROR] Attempted to load HAR.dll in 32-bit when 64-bit is expected."); 
-				return;
-			}
-
-			try
-			{
-				string basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-				string remotePath = Path.Combine(basePath, RemoteDllPath);
-				string localPath = Path.Combine(basePath, LocalDllPath);
-
-				string dllPath = File.Exists(remotePath) ? remotePath : localPath;
-
-				if (!File.Exists(dllPath))
-				{
-					Log($"[Rycia.Interhaptics.HAR] [ERROR] HAR.dll not found at: {dllPath}");
-					return;
-				}
-
-				_libraryHandle = LoadLibrary(dllPath);
-				if (_libraryHandle == IntPtr.Zero)
-				{
-					Log($"[Rycia.Interhaptics.HAR] [ERROR] Failed to load HAR.dll at: {dllPath}");
-					return;
-				}
-
-				
-				IntPtr initPtr = GetProcAddress(_libraryHandle, "Init"); // Optional: resolve critical function to ensure load succeeded properly
-                if (initPtr == IntPtr.Zero)
-				{
-					Log("[Rycia.Interhaptics.HAR] [ERROR] Failed to locate Init() in HAR.dll.");
-					return;
-				}
-				
-                LogDebug("[Rycia.Interhaptics.HAR] [INFO] HAR.dll loaded sucessfully and is ready to use."); // Ready to use
+                Log("[Rycia.Interhaptics.HAR] [ERROR] Attempted to load HAR.dll in 32-bit when 64-bit is expected.");
+                return;
             }
-			catch (Exception ex)
-			{
-				Log($"[Rycia.Interhaptics.HAR] [ERROR] Exception during HAR.dll loading: {ex}");
-			}
-		}
 
-		[DllImport("kernel32.dll", SetLastError = true)]
+            try
+            {
+                if (!File.Exists(DllPath))
+                {
+                    Log($"[Rycia.Interhaptics.HAR] [ERROR] HAR.dll not found at: {DllPath}");
+                    return;
+                }
+
+                _libraryHandle = LoadLibrary(DllPath);
+                if (_libraryHandle == IntPtr.Zero)
+                {
+                    Log($"[Rycia.Interhaptics.HAR] [ERROR] Failed to load HAR.dll at: {DllPath}");
+                    return;
+                }
+
+                IntPtr initPtr = GetProcAddress(_libraryHandle, "Init");
+                if (initPtr == IntPtr.Zero)
+                {
+                    Log("[Rycia.Interhaptics.HAR] [ERROR] Failed to locate Init() in HAR.dll.");
+                    return;
+                }
+
+                LogDebug("[Rycia.Interhaptics.HAR] [INFO] HAR.dll loaded successfully and is ready to use.");
+            }
+            catch (Exception ex)
+            {
+                Log($"[Rycia.Interhaptics.HAR] [ERROR] Exception during HAR.dll loading: {ex}");
+            }
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
 		private static extern IntPtr LoadLibrary(string lpFileName);
 
 		[DllImport("kernel32.dll", SetLastError = true)]
@@ -119,7 +108,6 @@ namespace RyciaVRCOSC.InterhapticsModule.Interhaptics
 		/// Sets the loop flag for a specific source
 		/// <param name="_hMaterialID">ID of the source. Same as the attached haptic effect.</param>
 		/// <param name="_numberOfLoops">Number of loops for the event. 0 means the source is not looping, 1 or more is the number of loops set</param>
-		/// <returns></returns>
 		[DllImport(DLL_NAME)] public static extern void SetEventLoop(int _hMaterialID, int _numberOfLoops);
 		/// Updates the haptic intensity for a specific target of a source.
 		/// <param name="_hMaterialId">ID of the source. Same as the attached haptic effect.</param>
@@ -137,9 +125,7 @@ namespace RyciaVRCOSC.InterhapticsModule.Interhaptics
 		/// <param name="_content">JSON content of the .haps file to be loaded. Needs to follow Interhaptics .haps format.</param>
 		/// <returns>true if the effect was properly updated, false otherwise.</returns>
 		[DllImport(DLL_NAME)] private static extern bool UpdateHM(int _id, string _content);
-
 		[DllImport(DLL_NAME)] public static extern double GetVibrationAmp(int _id, double _step, int _mode = 0);
-
 		[DllImport(DLL_NAME)] public static extern double GetVibrationFreq(int _id, double _step);
 		/// Retrieves the length of the vibration for a given haptic effect.
 		/// <param name="_id">The identifier for the haptic effect.</param>
@@ -167,22 +153,17 @@ namespace RyciaVRCOSC.InterhapticsModule.Interhaptics
 		[DllImport(DLL_NAME)] public static extern void StopAllEvents();
 		[DllImport(DLL_NAME)] public static extern void ClearActiveEvents();
         /// Removes all active sources from the memory. Deleted sources can be recreated by calling the PlayEvent function.
-
         [DllImport(DLL_NAME)] public static extern void ClearInactiveEvents();
-        /// Removes all inactive sources from the memory. Inactive sources are kept in memory to avoid deletion
-        /// and creation when playing and stopping a source.
-
+        /// Removes all inactive sources from the memory. Inactive sources are kept in memory to avoid deletion and creation when playing and stopping a source.
         /// Clears a specific haptic source whether it is active or not.
         /// <param name="_hMaterialId">ID of the source. Same as the attached haptic effect.</param>
         [DllImport(DLL_NAME)] public static extern void ClearEvent(int _hMaterialId);
-
         /// Sets the offsets for a specific haptic source.
         /// <param name="_hMaterialId">ID of the source. Same as the attached haptic effect.</param>
         /// <param name="_vibrationOffset">Vibration offset.</param>
         /// <param name="_textureOffset">Texture offset.</param>
         /// <param name="_stiffnessOffset">Stiffness offset.</param>
         [DllImport(DLL_NAME)] public static extern void SetEventOffsets(int _hMaterialId, double _vibrationOffset, double _textureOffset, double _stiffnessOffset);
-
         /// Updates the spatial positions for a specific source target.
         /// <param name="_hMaterialId">ID of the source. Same as the attached haptic effect.</param>
         /// <param name="_target">Array of CommandData to build a target. A target contains a group of body parts, lateral flags, and exclusion flags.</param>

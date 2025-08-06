@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
 using RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN;
-//using RyciaVRCOSC.InterhapticsModule.Interhaptics;
+using RyciaVRCOSC.InterhapticsModule.Interhaptics;
 #endregion
 
 #region Notes
@@ -74,10 +74,9 @@ public class InterhapticsModule : Module
         GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity); // Obtain intensity as raw float
 
         //Grab and initialize parameters
-        /*
+        
         #region Initialize Interhaptics SDK
-        bool harInit = HAR.Init();
-        bool providerInit = HAR.ProviderInit();
+        /*bool harInit = HAR.Init();
 
         if (!harInit)
         {
@@ -85,15 +84,16 @@ public class InterhapticsModule : Module
             return Task.FromResult(false);
         }
 
-        if (!providerInit)
+        if (!HAR.ProviderInit())
         {
             Log("[Rycia.Interhaptics] [ERROR] ProviderInit() failed.");
             return Task.FromResult(false);
         }
 
         Log("[Rycia.Interhaptics] [INFO] Interhaptics SDK initialized successfully.");
-        #endregion
         */
+        #endregion
+        
         #region Initialize WYVRN SDK
         if (!WyvrnAPI.IsWyvrnSDKAvailable())
         {
@@ -118,13 +118,12 @@ public class InterhapticsModule : Module
 
         return Task.FromResult(true);
     }
-
-    /*
     protected override Task OnModuleStop()
     {
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnModuleStop");
 
         // Deinitialize Interhaptics
+        /*
         try
         {
             bool providerCleanSuccess = HAR.ProviderClean();
@@ -139,6 +138,7 @@ public class InterhapticsModule : Module
         {
             Log($"[Rycia.Interhaptics] [ERROR] Exception during Interhaptics shutdown: {ex}");
         }
+        */
 
         // Deinitialize WYVRN
         try
@@ -163,7 +163,7 @@ public class InterhapticsModule : Module
 
         return Task.CompletedTask;
     }
-    */
+
     protected override void OnRegisteredParameterReceived(RegisteredParameter parameter)
     {
         switch (parameter.Lookup)
