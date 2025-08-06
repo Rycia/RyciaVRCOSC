@@ -1,7 +1,5 @@
-﻿/* ​
-* Copyright (c) 2024 Go Touch VR SAS. All rights reserved. ​
-* ​https://doc.wyvrn.com/docs/interhaptics-sdk/haptics-sdk-for-game-engines/overview/
-*/
+﻿// Copyright (c) 2024 Go Touch VR SAS. All rights reserved. ​
+
 
 using System;
 using System.IO;
