@@ -9,8 +9,21 @@ These are the modules included in this package.
 ## Interhaptics
 Parameter support for Interhaptics-based devices such as Razer headsets with Razer Sensa haptic feedback.  
 
-Please read this entire section to ensure your setup is correct.  
-This requires Razer Synapse to be installed.  
+This can potentially be a replacement for people who use headsets and other devices with Razer's haptic feedback to posess similar functionality of something similar to OSCGoesBRR or a Gigglepuck.  
+Think about it! Instead of buying two Giggle Pucks, or if you already have one of the popular Razer haptic headsets, or another device, you could have haptic headphones instead of shelling out for extra haptic devices that are going to be extra weight strapped to your head during a long VR session, using technology it already supports; it just has to be bridged over to OSC!
+
+This supports the following devices, these are just a few:
+- Razer Kraken V4 Pro
+- Razer Kraken V3 HyperSense
+- Razer Kraken V3 Pro
+- Razer Nari Ultimate
+
+These are just a few devices, please report to add to the list here if there's a missing device.  
+This list is loose, if you have a Razer headset with haptics, period, it should work. If you don't have a Razer headset but it's haptic, like Steelseries, you can still try it and it may surprisingly work. Many haptic devices by very large companies use WYVRN and Interhaptics as their underlying tech for this very special feedback, so any device that was built with Interhaptics in mind should work.
+
+
+### Please read this entire section to ensure your setup is correct.  
+To start, this requires Razer Synapse 4+ and Razer Chroma to be installed. If you do not have Razer installed, install it, and reboot your computer.
 
 In order to use this module, you must allow the application in your Razer Chroma Studio under Chroma Apps, and make sure Chroma Apps are enabled altogether.
 <img width="1282" height="332" alt="image" src="https://github.com/user-attachments/assets/b94ff12b-d0e7-491b-bbfb-f39fc1c3b5d8" />
@@ -29,12 +42,3 @@ WYVRN is already included with Razer's installation, so nothing is necessary wit
 
 DLL's and heavily modified de-Unity'ed SDK content is used from here from [WYVRN](https://doc.wyvrn.com/docs/wyvrn-sdk/unity/) and [Interhaptics](https://doc.wyvrn.com/docs/interhaptics-sdk/haptics-sdk-for-game-engines/key-concepts/).  
 Thank you to the Interhaptics and WYVRN team for helping me out with their SDK, since this repo was never an intended-- but a creative usecase!
-
-This can potentially be a replacement for people who use headsets and other devices with Razer's haptic feedback to posess similar functionality of something similar to OSCGoesBRR or a Gigglepuck.  
-This includes the following devices:
-- Razer Kraken V4 Pro
-- Razer Nari Ultimate
-- Razer Freyja
-- Razer Wolverine V3 Pro  
-
-These are just a few devices, please report to add to the list here if there's a missing device.
