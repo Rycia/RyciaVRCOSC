@@ -1,8 +1,10 @@
 ﻿#region Using Imports
+using System;
 using System.Threading.Tasks;
 using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
 using RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN;
+//using RyciaVRCOSC.InterhapticsModule.Interhaptics;
 #endregion
 
 #region Notes
@@ -28,6 +30,7 @@ public class InterhapticsModule : Module
     #region Program Variables
     private int _mResult = 0; // This is the result on wether or not if Wyvrn successfully loaded up or not. Needs to be here to be global to this class.
     public static System.Action<string>? ExternalLogger; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
+    public static System.Action<string>? ExternalLoggerDebug; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
     #endregion
 
     #region Module Loading
@@ -36,11 +39,7 @@ public class InterhapticsModule : Module
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnPreLoad");
         //protected means only this class and its subclasses can access this method. It's not public, so it can't be called from just anywhere.
         //override means this method replaces a method with the same name from a parent/base class, void means it doesnt return anything.
-
         //OnPreLoad() happens before the module loads the user's data from disk and begins the loading process to get itself ready to be run.
-        //is where you should define all the static things for the module.E.G,
-        //creating the settings, registering the parameters, and setting up any unchanging states, events, and variables
-        //The recommended way is to setup settings and parameters in OnPreLoad and anything to do with the module in OnPostLoad to keep things clean
 
         //VRCOSC SETTINGS - static, required to be OnPreLoad so that a user's settings can be loaded when the module loads. Configs in VRCX
         LogDebug("[Rycia.Interhaptics] [DEBUG] Registering settings.");
@@ -57,7 +56,8 @@ public class InterhapticsModule : Module
     protected override void OnPostLoad()
     {
         LogDebug("[Rycia.Interhaptics] [DEBUG] OnPostLoad");
-        ExternalLogger = Log; //Exposes the Log() function to WyvrnAPI.CS, which otherwise can't access it for modified extra logging.
+        ExternalLogger = Log; //Exposes the Log() and LogDebug() function, which otherwise other scripts can't access it for modified extra logging.
+        ExternalLoggerDebug = LogDebug;
     }
     #endregion
 
@@ -74,9 +74,27 @@ public class InterhapticsModule : Module
         GetSettingValue<float>(InterhapticsVRCOSCSetting.Intensity); // Obtain intensity as raw float
 
         //Grab and initialize parameters
-        //Placeholder
+        /*
+        #region Initialize Interhaptics SDK
+        bool harInit = HAR.Init();
+        bool providerInit = HAR.ProviderInit();
 
-        // Initialize WYVRN SDK
+        if (!harInit)
+        {
+            Log("[Rycia.Interhaptics] [ERROR] HAR.Init() failed.");
+            return Task.FromResult(false);
+        }
+
+        if (!providerInit)
+        {
+            Log("[Rycia.Interhaptics] [ERROR] ProviderInit() failed.");
+            return Task.FromResult(false);
+        }
+
+        Log("[Rycia.Interhaptics] [INFO] Interhaptics SDK initialized successfully.");
+        #endregion
+        */
+        #region Initialize WYVRN SDK
         if (!WyvrnAPI.IsWyvrnSDKAvailable())
         {
             _mResult = RazerErrors.RZRESULT_DLL_NOT_FOUND;
@@ -96,10 +114,56 @@ public class InterhapticsModule : Module
             Log($"[Rycia.Interhaptics] [ERROR] WYVRN SDK failed to initialize. Error Code: {_mResult}");
             return Task.FromResult(false);
         }
+        #endregion
 
         return Task.FromResult(true);
     }
 
+    /*
+    protected override Task OnModuleStop()
+    {
+        LogDebug("[Rycia.Interhaptics] [DEBUG] OnModuleStop");
+
+        // Deinitialize Interhaptics
+        try
+        {
+            bool providerCleanSuccess = HAR.ProviderClean();
+            HAR.Quit();
+
+            if (providerCleanSuccess)
+                Log("[Rycia.Interhaptics] [INFO] Interhaptics SDK shut down successfully.");
+            else
+                Log("[Rycia.Interhaptics] [WARN] ProviderClean() failed during Interhaptics shutdown.");
+        }
+        catch (Exception ex)
+        {
+            Log($"[Rycia.Interhaptics] [ERROR] Exception during Interhaptics shutdown: {ex}");
+        }
+
+        // Deinitialize WYVRN
+        try
+        {
+            if (_mResult == RazerErrors.RZRESULT_SUCCESS)
+            {
+                int result = WyvrnAPI.CoreUnInit();
+                if (result == RazerErrors.RZRESULT_SUCCESS)
+                {
+                    Log("[Rycia.Interhaptics] [INFO] WYVRN SDK stopped successfully.");
+                }
+                else
+                {
+                    Log($"[Rycia.Interhaptics] [WARN] WYVRN SDK failed to stop. Error Code: {result}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log($"[Rycia.Interhaptics] [ERROR] Exception during WYVRN shutdown: {ex}");
+        }
+
+        return Task.CompletedTask;
+    }
+    */
     protected override void OnRegisteredParameterReceived(RegisteredParameter parameter)
     {
         switch (parameter.Lookup)
@@ -135,7 +199,7 @@ public class InterhapticsModule : Module
         }
     }
     #endregion
-
+    
     #region Module Variables
     private enum InterhapticsVRCOSCSetting // For the settings UI, defines the order/grouping of what setting goes under what section
     {

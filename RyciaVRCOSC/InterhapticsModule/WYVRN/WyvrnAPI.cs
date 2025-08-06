@@ -13,13 +13,10 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string Title;
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
         public string Description;
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string Author_Name;
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string Author_Contact;
 
@@ -55,7 +52,7 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
             APPINFOTYPE appInfo = new APPINFOTYPE
             {
                 Title = "InterhapticsOSC",
-                Description = "Connects VRChat OSC parameters to Razer Sensa/Hypersense devices via WYVRN",
+                Description = "Connects VRChat OSC parameters to Razer Sensa/Hypersense devices via WYVRN.",
                 Author_Name = "Rycia",
                 Author_Contact = "https://github.com/Rycia/RyciaVRCOSC",
                 Category = 1,
@@ -77,14 +74,14 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
 
                 if (!File.Exists(dllPath))
                 {
-                    RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke($"[Wyvrn] DLL not found at: {dllPath}");
+                    Log($"[Rycia.Interhaptics.Wyvrn] [ERROR] DLL not found at: {dllPath}");
                     return;
                 }
 
                 _libraryHandle = LoadLibrary(dllPath);
                 if (_libraryHandle == nint.Zero)
                 {
-                    RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke($"[InWyvrn] Failed to load DLL at: {dllPath}");
+                    Log($"[Rycia.Interhaptics.Wyvrn] [ERROR] Failed to load DLL at: {dllPath}");
                     return;
                 }
 
@@ -94,7 +91,7 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
 
                 if (initPtr == nint.Zero || setEventPtr == nint.Zero || uninitPtr == nint.Zero)
                 {
-                    RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke("[Wyvrn] Failed to locate one or more required DLL methods.");
+                    Log("[Rycia.Interhaptics.Wyvrn] [ERROR] Failed to locate one or more required DLL methods.");
                     return;
                 }
 
@@ -106,45 +103,7 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
             }
             catch (Exception ex)
             {
-                RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke($"[Wyvrn] Exception during DLL loading: {ex}");
-            }
-        }
-
-        private static bool IsProductionVersionAvailable(string fileName)
-        {
-            try
-            {
-                FileInfo fi = new FileInfo(fileName);
-                if (!fi.Exists)
-                {
-                    return false;
-                }
-
-                var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(fileName);
-                string fileVersion = versionInfo.FileVersion;
-                RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke($"ChromaSDK Version={fileVersion} File={fileName}");
-
-                string[] parts = fileVersion.Split('.');
-                if (parts.Length < 4 ||
-                    !int.TryParse(parts[0], out int major) ||
-                    !int.TryParse(parts[1], out int minor) ||
-                    !int.TryParse(parts[2], out int build) ||
-                    !int.TryParse(parts[3], out int revision))
-                {
-                    return false;
-                }
-
-                return major > 2 ||
-                       major == 2 && minor > 0 ||
-                       major == 2 && minor == 0 && build > 2 ||
-                       major == 2 && minor == 0 && build == 2 && revision >= 0;
-            }
-            catch (Exception ex)
-            {
-                string errorMessage = $"[Rycia.Interhaptics.WYVRN] [ERROR] The ChromaSDK is not available! Exception={ex}";
-                Console.WriteLine(errorMessage);
-                RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke(errorMessage);
-                return false;
+                Log($"[Rycia.Interhaptics.Wyvrn] [ERROR] Exception during DLL loading: {ex}");
             }
         }
 
@@ -220,5 +179,15 @@ namespace RyciaVRCOSC.InterhapticsModule.Haptics.WYVRN
             }
             return result;
         }
+        #region VRCOSC Logger
+        private static void Log(string message) // Shorten 
+        {
+            Log(message);
+        }
+        private static void LogDebug(string message) // Shorten 
+        {
+            RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLoggerDebug?.Invoke(message);
+        }
+        #endregion
     }
 }

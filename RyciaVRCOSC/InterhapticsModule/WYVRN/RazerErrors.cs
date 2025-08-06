@@ -47,5 +47,15 @@
             }
             return result.ToString();
         }
+        #region VRCOSC Logger
+        private static void Log(string message) // Shorten 
+        {
+            RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLogger?.Invoke(message);
+        }
+        private static void LogDebug(string message) // Shorten 
+        {
+            RyciaVRCOSC.InterhapticsModule.InterhapticsModule.ExternalLoggerDebug?.Invoke(message);
+        }
+        #endregion
     }
 }

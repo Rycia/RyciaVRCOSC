@@ -9,13 +9,16 @@
 		<PlatformTarget>x64</PlatformTarget>
 		<Prefer32Bit>false</Prefer32Bit>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-		<PackageReference Include="VolcanicArts.VRCOSC.SDK" Version="2025.212.0" />
+	  <Compile Remove="InterhapticsModule\Interhaptics\**" />
+	  <EmbeddedResource Remove="InterhapticsModule\Interhaptics\**" />
+	  <None Remove="InterhapticsModule\Interhaptics\**" />
+	  <Page Remove="InterhapticsModule\Interhaptics\**" />
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <Folder Include="InterhapticsModule\Interhaptics\" />
+		<PackageReference Include="VolcanicArts.VRCOSC.SDK" Version="2025.212.0" />
 	</ItemGroup>
 
 	<!--> This is a post build event that copies your module assembly to the local package directory for VRCOSC <-->
