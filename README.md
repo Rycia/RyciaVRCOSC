@@ -41,4 +41,4 @@ These DLL's are essential for hardware integration with Interhaptics, and I don'
 WYVRN is already included with Razer's installation, so nothing is necessary with WYVRN.
 
 DLL's and heavily modified de-Unity'ed SDK content is used from here from [WYVRN](https://doc.wyvrn.com/docs/wyvrn-sdk/unity/) and [Interhaptics](https://doc.wyvrn.com/docs/interhaptics-sdk/haptics-sdk-for-game-engines/key-concepts/).  
-Thank you to the Interhaptics and WYVRN team for helping me out with their SDK, since this repo was never an intended-- but a creative usecase!
+Thank you to the Interhaptics and WYVRN team for personally helping me out with their SDK, since this repo was never an intended-- but a creative usecase!
