@@ -22,6 +22,7 @@ This folder will not exist yet, and it causes problems when being put in the
 or  
 "C:\Users\YOURUSERNAMEHERE\AppData\Roaming\VRCOSC\packages\remote\rycia.vrcosc.modules" folders.
 <img width="665" height="202" alt="image" src="https://github.com/user-attachments/assets/ddab85c8-756c-4897-ba06-c6113baf21d8" />
+
 Doing so anyways will cause issues; such as none of my modules loading at all, so it is hardcoded to use these DLL's from this location and is not included with the normal build.  
 These DLL's are essential for hardware integration with Interhaptics, and I don't expect them to update once you set them up.
 WYVRN is already included with Razer's installation, so nothing is necessary with WYVRN.
