@@ -7,6 +7,8 @@ This is a package for VRCOSC containing module(s) made by Rycia.
 These are the modules included in this package.
 
 ## Interhaptics
+### As of 10/3/2025, Interhaptics has been moved to its own standalone application at https://github.com/Rycia/InterhapticsVRC
+
 Parameter support for Interhaptics-based devices such as Razer headsets with Razer Sensa haptic feedback.  
 
 This can potentially be a replacement for people who use headsets and other devices with Razer's haptic feedback to posess similar functionality of something similar to OSCGoesBRR or a Gigglepuck.  
