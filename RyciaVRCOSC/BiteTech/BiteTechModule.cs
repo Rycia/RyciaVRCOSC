@@ -1,7 +1,5 @@
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+using BindingFlags = System.Reflection.BindingFlags;
 using System.Threading.Tasks;
 using VRCOSC.App.SDK.Modules;
 using VRCOSC.App.SDK.Parameters;
@@ -14,21 +12,17 @@ namespace RyciaVRCOSC.BiteTech;
 [ModuleType(ModuleType.Generic)]
 public sealed class BiteTechModule : Module
 {
-    private enum Setting { Address, Port, Hand, Debug }
+    private enum Setting { Hand, Debug }
     private enum Parameter { Grab, Reset }
     private enum GrabHand { Right, Left }
 
     private readonly object gate = new();
-    private UdpClient? client;
-    private byte[] pressed = Array.Empty<byte>();
-    private byte[] released = Array.Empty<byte>();
+    private Action<string, object?[]>? sendOsc;
+    private string grabAddress = string.Empty;
     private bool biting;
 
     protected override void OnPreLoad()
     {
-        CreateTextBox(Setting.Address, "Output address", "VRChat's OSC destination IP address. Applied when the module starts.", "127.0.0.1");
-        CreateTextBox(Setting.Port, "Output port", "VRChat's OSC input port, normally 9000. Applied when the module starts.", 9000);
-        CreateGroup("Connection", Setting.Address, Setting.Port);
         CreateDropdown(Setting.Hand, "Grab hand", "The original BiteTech prefab uses Right. Applied when the module starts.", GrabHand.Right);
         CreateToggle(Setting.Debug, "Diagnostic logging", "Log grab and release messages.", false);
         CreateGroup("Features", Setting.Hand, Setting.Debug);
@@ -42,32 +36,19 @@ public sealed class BiteTechModule : Module
     {
         lock (gate)
         {
-            var port = GetSettingValue<int>(Setting.Port);
-            if (!IPAddress.TryParse(GetSettingValue<string>(Setting.Address), out var address) || port < 1 || port > 65535)
+            var player = GetPlayer();
+            sendOsc = BindSharedSender(player);
+            if (sendOsc is null)
             {
-                Log("Enter a valid output IP address and port from 1 to 65535.");
+                Log("This version of VRCOSC does not expose the OSC sender BiteTech needs for held grab input.");
                 return Task.FromResult(false);
             }
 
-            try
-            {
-                var hand = GetSettingValue<GrabHand>(Setting.Hand);
-                var path = hand == GrabHand.Left ? "/input/GrabLeft" : "/input/GrabRight";
-                pressed = Encode(path, true);
-                released = Encode(path, false);
-                client = new UdpClient(address.AddressFamily);
-                client.Connect(address, port);
-                biting = false;
-                Send(false);
-                return Task.FromResult(true);
-            }
-            catch (Exception e) when (e is SocketException or ArgumentException)
-            {
-                client?.Dispose();
-                client = null;
-                Log($"Could not start BiteTech. {e.Message}");
-                return Task.FromResult(false);
-            }
+            var hand = GetSettingValue<GrabHand>(Setting.Hand);
+            grabAddress = hand == GrabHand.Left ? "/input/GrabLeft" : "/input/GrabRight";
+            biting = false;
+            Send(false);
+            return Task.FromResult(true);
         }
     }
 
@@ -75,7 +56,7 @@ public sealed class BiteTechModule : Module
     {
         lock (gate)
         {
-            if (client is null)
+            if (sendOsc is null)
                 return;
 
             var reset = parameter.Lookup.Equals(Parameter.Reset);
@@ -89,7 +70,7 @@ public sealed class BiteTechModule : Module
     {
         lock (gate)
         {
-            if (client is not null)
+            if (sendOsc is not null)
                 Send(false);
         }
     }
@@ -98,7 +79,7 @@ public sealed class BiteTechModule : Module
     {
         lock (gate)
         {
-            if (client is null)
+            if (sendOsc is null)
                 return Task.CompletedTask;
 
             try
@@ -107,8 +88,7 @@ public sealed class BiteTechModule : Module
             }
             finally
             {
-                client.Dispose();
-                client = null;
+                sendOsc = null;
                 biting = false;
             }
         }
@@ -117,28 +97,19 @@ public sealed class BiteTechModule : Module
 
     private void Send(bool value)
     {
-        try
-        {
-            var packet = value ? pressed : released;
-            client!.Send(packet, packet.Length);
-            biting = value;
-            if (GetSettingValue<bool>(Setting.Debug))
-                Log(value ? "Biting" : "Released");
-        }
-        catch (SocketException e)
-        {
-            Log($"Could not send BiteTech input. {e.Message}");
-        }
+        sendOsc!(grabAddress, [value ? 1 : 0]);
+        biting = value;
+        if (GetSettingValue<bool>(Setting.Debug))
+            Log(value ? "Biting" : "Released");
     }
 
-    // OSC strings are null-terminated and padded to four bytes. Boolean tags carry no payload.
-    internal static byte[] Encode(string address, bool value)
+    // Player.GrabLeft/Right send short pulses. Use the same sender to hold the input
+    // until the prefab releases it. Resolve the private field once per module start.
+    private static Action<string, object?[]>? BindSharedSender(Player player)
     {
-        var length = (Encoding.UTF8.GetByteCount(address) + 4) & ~3;
-        var packet = new byte[length + 4];
-        Encoding.UTF8.GetBytes(address, 0, address.Length, packet, 0);
-        packet[length] = (byte)',';
-        packet[length + 1] = (byte)(value ? 'T' : 'F');
-        return packet;
+        var client = typeof(Player).GetField("oscClient", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?.GetValue(player);
+        var send = client?.GetType().GetMethod("Send", [typeof(string), typeof(object[])]);
+        return send?.CreateDelegate<Action<string, object?[]>>(client);
     }
 }
