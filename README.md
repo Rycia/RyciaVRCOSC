@@ -75,3 +75,22 @@ Thank you to the Interhaptics and WYVRN team for personally helping me out with 
 There is a prefab set up for you to put on your VRChat avatars. [You can get it here](https://github.com/Rycia/RyciaVRCOSC/tree/90c7d83ed2fec07f5618fc01a627d9662fa40b93/RyciaVRCOSC/prefabs) or at "RyciaVRCOSC/prefabs/InterhapticsOSC". An INSTRUCTIONS.txt is available with the download. You can put it anywhere on your avatar, and constrain it to the head. They're just a few contacts and parameters pre-set up with a global toggle for your avatar.
 <img width="1320" height="896" alt="{7713FA8D-FF35-45DA-A846-9D09E93DC051}" src="https://github.com/user-attachments/assets/ddbf8960-651a-4aa7-be0b-94028cc81547" />
 
+
+## BiteTech
+
+Enable the BiteTech module and use Sacred's BiteTech prefab on your avatar with
+VRChat OSC enabled. VRCOSC receives the Boolean parameters `bite/Grab` and
+`bite/Reset`. The module holds the selected grab input while biting and releases
+it on reset, avatar change, and module stop.
+
+Under **Connection**, configure VRChat's destination IP address and OSC input
+port (defaults to 127.0.0.1 and 9000). Under **Features**, select the grab hand
+(default Right, as required by the original prefab) and diagnostic logging.
+Restart the module after changing the connection or hand. Incoming parameter
+names can be changed using VRCOSC's parameter settings.
+
+Close the standalone BiteTech companion app when using this module. The Rabies
+add-on is installed on the Unity prefab following Sacred's instructions.
+
+The integration was implemented from the companion app's OSC behavior. Obtain
+the prefab and its optional add-ons from Sacred. They are not bundled here.
