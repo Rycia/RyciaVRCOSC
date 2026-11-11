@@ -83,11 +83,10 @@ VRChat OSC enabled. VRCOSC receives the Boolean parameters `bite/Grab` and
 `bite/Reset`. The module holds the selected grab input while biting and releases
 it on reset, avatar change, and module stop.
 
-Under **Connection**, configure VRChat's destination IP address and OSC input
-port (defaults to 127.0.0.1 and 9000). Under **Features**, select the grab hand
-(default Right, as required by the original prefab) and diagnostic logging.
-Restart the module after changing the connection or hand. Incoming parameter
-names can be changed using VRCOSC's parameter settings.
+BiteTech uses VRCOSC's connection to VRChat, including OSCQuery in Local mode.
+Under **Features**, select the grab hand (default Right) and diagnostic logging.
+Restart the module after changing the hand. Incoming parameter names can be
+changed using VRCOSC's parameter settings.
 
 Close the standalone BiteTech companion app when using this module. The Rabies
 add-on is installed on the Unity prefab following Sacred's instructions.
