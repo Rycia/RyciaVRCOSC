@@ -3,10 +3,18 @@ This is a package for VRCOSC containing module(s) made by Rycia.
 
 
 
+**AI disclosure:** AI tools assisted with writing portions of the code for some modules, including Boop Counter and BiteTech.
+
 # Modules
 These are the modules included in this package.
 
 ## Boop Counter
+
+**The ValueFactory Boop Counter prefab is required and is NOT provided.**
+Get it from [ValueFactory's VRChat Boop Counter store page](https://shader.gay/products/vrchat-boop-counter-universal).
+
+This module runs boop counting inside VRCOSC to reduce background processes and simplify OSC routing. Using VRCOSC's shared connection avoids the need to reroute OSC for the standalone Boop Counter app.
+**Do not run this module with the original Boop Counter app.**
 
 Use your existing ValueFactory Boop Counter prefab with VRChat OSC enabled. The
 module listens for the prefab's Boolean `OSCBoop` parameter through VRCOSC's
@@ -22,8 +30,9 @@ settings if you use a router.
    and set the daily reset time using your computer's local time. Set the
    default message duration before adding the event, or edit its duration on
    the timeline if it is already there.
-3. To migrate your counts, close the standalone app and enter the full path
-   to its version-2 `boops.json` under **File Locations**. For a trial run,
+3. You can reuse the original app's version-2 `boops.json` to keep your counts.
+   Close the original app and **make a manual backup first**, then enter the full
+   path to `boops.json` under **File Locations**. For a trial run,
    point the module to a copy. Before its first update to an existing file,
    the module creates a `boops.json.pre-vrcosc.bak` backup beside it. A blank
    path uses `%APPDATA%\VRCOSC\RyciaVRCOSC\BoopCounter\boops.json`.
@@ -78,6 +87,12 @@ There is a prefab set up for you to put on your VRChat avatars. [You can get it 
 
 ## BiteTech
 
+**Sacred's BiteTech prefab is required and is NOT provided.**
+Get it from [Sacred's VRC BiteTech store page](https://jinxxy.com/Sacred/VRCBiteTech).
+
+This module runs BiteTech's grab handling inside VRCOSC to reduce background processes and simplify OSC routing. Using VRCOSC's shared connection avoids the need to reroute OSC for the standalone VRC BiteTech app.
+**Do not run this module with the original BiteTech app.**
+
 Enable the BiteTech module and use Sacred's BiteTech prefab on your avatar with
 VRChat OSC enabled. VRCOSC receives the Boolean parameters `bite/Grab` and
 `bite/Reset`. The module holds the selected grab input while biting and releases
@@ -88,8 +103,4 @@ Under **Features**, select the grab hand (default Right) and diagnostic logging.
 Restart the module after changing the hand. Incoming parameter names can be
 changed using VRCOSC's parameter settings.
 
-Close the standalone BiteTech companion app when using this module. The Rabies
-add-on is installed on the Unity prefab following Sacred's instructions.
-
-The integration was implemented from the companion app's OSC behavior. Obtain
-the prefab and its optional add-ons from Sacred. They are not bundled here.
+Install the optional Rabies add-on on the Unity prefab following Sacred's instructions.
