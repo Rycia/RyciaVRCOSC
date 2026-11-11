@@ -6,6 +6,33 @@ This is a package for VRCOSC containing module(s) made by Rycia.
 # Modules
 These are the modules included in this package.
 
+## Boop Counter
+
+Use your existing ValueFactory Boop Counter prefab with VRChat OSC enabled. The
+module listens for the prefab's Boolean `OSCBoop` parameter through VRCOSC's
+shared OSC connection. Configure addresses and ports in VRCOSC's connection
+settings if you use a router.
+
+1. Enable **Boop Counter** in VRCOSC. For ChatBox messages, add the module's
+   **Booped** event to a ChatBox timeline clip. The event includes the boop
+   message variable. Leave the clip's idle content empty to show boops only
+   after a contact.
+2. Under **Features**, choose daily, lifetime, or both counts. You can pause
+   messages while still counting contacts, toggle special-number messages,
+   and set the daily reset time using your computer's local time. Set the
+   default message duration before adding the event, or edit its duration on
+   the timeline if it is already there.
+3. To migrate your counts, close the standalone app and enter the full path
+   to its version-2 `boops.json` under **File Locations**. For a trial run,
+   point the module to a copy. Before its first update to an existing file,
+   the module creates a `boops.json.pre-vrcosc.bak` backup beside it. A blank
+   path uses `%APPDATA%\VRCOSC\RyciaVRCOSC\BoopCounter\boops.json`.
+
+The module counts each rising edge and sends at most one ChatBox update every
+two seconds. Daily counts reset at the configured time while the module is
+running and catch up on start. The module's run panel has confirmation prompts
+for **Reset Daily Boops** and **Undo Daily Boop Reset**.
+
 ## Interhaptics
 ### As of 10/3/2025, Interhaptics has been moved to its own standalone application at https://github.com/Rycia/InterhapticsVRC due to VRCOSC not being suited for this usecase; this module won't work because it was never complete.
 
